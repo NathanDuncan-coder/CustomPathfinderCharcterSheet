@@ -1,0 +1,213 @@
+//
+//  CharacterSheetSkills.swift
+//  PathfinderCustomCharacterSheet
+//
+//  Created by CD DJ on 12/22/24.
+//
+
+import SwiftUI
+
+struct SkillsSection: View {
+    @State private var skills: [String: String] = [:]
+    @State private var craftExpanded: Bool = false
+    @State private var professionExpanded: Bool = false
+    @State private var KnowlegdeExpanded: Bool = false
+    
+    // Data for categories and subcategories
+    let craftSkills = [
+        "Craft: Alchemy", "Craft: Armor", "Craft: Baskets", "Craft: Books",
+        "Craft: Bows", "Craft: Calligraphy", "Craft: Carpentry", "Craft: Cloth",
+        "Craft: Clothing", "Craft: Glass", "Craft: Jewelry", "Craft: Leather",
+        "Craft: Locks", "Craft: Paintings", "Craft: Pottery", "Craft: Sculptures",
+        "Craft: Ships", "Craft: Shoes", "Craft: Stonemasonry", "Craft: Traps",
+        "Craft: Weapons","Craft: Mechanics",
+    ]
+    
+    let professionSkills = [
+        "Profession: Architect", "Profession: Baker", "Profession: Barrister",
+        "Profession: Brewer", "Profession: Butcher", "Profession: Clerk",
+        "Profession: Cook", "Profession: Courtesan", "Profession: Driver",
+        "Profession: Engineer", "Profession: Farmer", "Profession: Fisherman",
+        "Profession: Gambler", "Profession: Gardener", "Profession: Herbalist",
+        "Profession: Innkeeper", "Profession: Librarian", "Profession: Merchant",
+        "Profession: Midwife", "Profession: Miller", "Profession: Miner",
+        "Profession: Porter", "Profession: Sailor", "Profession: Scribe",
+        "Profession: Shepherd", "Profession: Stable Master", "Profession: Soldier",
+        "Profession: Tanner", "Profession: Trapper", "Profession: Woodcutter"
+    ]
+    
+    let KnowlegdeSkills = [
+        "Knowlegde: Arcana", "Knowlegde: Dungeoneering","Knowlegde: Ebgineering",
+        "Knowlegde: Geography", "Knowlegde: History","Knowlegde: Local",
+        "Knowlegde: Nature", "Knowlegde: Nobility","Knowlegde: Planes","Knowlegde: Religion",
+    ]
+    
+    // Dictionary mapping skills to ability modifiers
+    let skillModifiers: [String: String] = [
+        "Acrobatics": "Dex", "Appraise": "Int", "Bluff": "Cha", "Climb": "Str",
+        "Diplomacy": "Cha", "Disable Device": "Dex", "Disguise": "Cha", "Escape Artist": "Dex",
+        "Fly": "Dex", "Handle Animal": "Cha", "Heal": "Wis", "Intimidate": "Cha",
+        "Knowledge": "Int", "Linguistics": "Int", "Perception": "Wis", "Perform": "Cha",
+        "Ride": "Dex", "Sense Motive": "Wis", "Sleight of Hand": "Dex", "Spellcraft": "Int",
+        "Stealth": "Dex", "Survival": "Wis", "Swim": "Str"
+    ]
+    
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 15) {
+                SectionHeader(title: "Skills")
+                
+                // Main Skills
+                ForEach(getBaseSkills(), id: \.self) { skill in
+                    SkillInputRow(
+                        label: skill,
+                        abilityModifier: skillModifiers[skill, default: "—"],
+                        value: getBinding(for: skill)
+                    )
+                }
+                
+                // Craft Skills (Collapsible)
+                CollapsibleSection(title: "Craft Skills", expanded: $craftExpanded) {
+                    ForEach(craftSkills, id: \.self) { skill in
+                        SkillInputRow(
+                            label: skill,
+                            abilityModifier: "Int", // Craft uses Intelligence
+                            value: getBinding(for: skill)
+                        )
+                    }
+                }
+                
+                // Profession Skills (Collapsible)
+                CollapsibleSection(title: "Profession Skills", expanded: $professionExpanded) {
+                    ForEach(professionSkills, id: \.self) { skill in
+                        SkillInputRow(
+                            label: skill,
+                            abilityModifier: "Wis", // Profession uses Wisdom
+                            value: getBinding(for: skill)
+                        )
+                    }
+                }
+                
+                // Knowledge Skills (Collapsible)
+                CollapsibleSection(title: "Knowledge Skills", expanded: $KnowlegdeExpanded) {
+                    ForEach(KnowlegdeSkills, id: \.self) { skill in
+                        SkillInputRow(
+                            label: skill,
+                            abilityModifier: "Int", // Knowledge uses Intelligence
+                            value: getBinding(for: skill)
+                        )
+                    }
+                }
+                
+                Button(action: {
+                    // Handle saving the data here
+                }) {
+                    Text("Save Skills")
+                        .fontWeight(.bold)
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
+                }
+                .padding(.top, 20)
+            }
+            .padding()
+        }
+    }
+
+    private func getBinding(for skill: String) -> Binding<String> {
+        Binding(
+            get: { skills[skill, default: ""] },
+            set: { skills[skill] = $0 }
+        )
+    }
+
+    func getBaseSkills() -> [String] {
+        return [
+            "Acrobatics", "Appraise", "Bluff", "Climb", "Diplomacy", "Disable Device",
+            "Disguise", "Escape Artist", "Fly", "Handle Animal", "Heal", "Intimidate",
+            "Knowledge", "Linguistics", "Perception", "Perform", "Ride", "Sense Motive",
+            "Sleight of Hand", "Spellcraft", "Stealth", "Survival", "Swim"
+        ]
+    }
+}
+
+struct CollapsibleSection<Content: View>: View {
+    let title: String
+    @Binding var expanded: Bool
+    let content: Content
+
+    init(title: String, expanded: Binding<Bool>, @ViewBuilder content: () -> Content) {
+        self.title = title
+        self._expanded = expanded
+        self.content = content()
+    }
+
+    var body: some View {
+        VStack(alignment: .leading) {
+            Button(action: {
+                withAnimation {
+                    expanded.toggle()
+                }
+            }) {
+                HStack {
+                    Text(title)
+                        .font(.headline)
+                    Spacer()
+                    Image(systemName: expanded ? "chevron.down" : "chevron.right")
+                        .foregroundColor(.gray)
+                }
+            }
+            .padding(.vertical, 5)
+
+            if expanded {
+                VStack(alignment: .leading, spacing: 10) {
+                    content
+                }
+                .padding(.leading, 10)
+            }
+        }
+    }
+}
+
+struct SkillInputRow: View {
+    var label: String
+    var abilityModifier: String
+    @Binding var value: String
+    
+    var body: some View {
+        HStack {
+            Text(label)
+                .font(.subheadline)
+                .frame(width: 150, alignment: .leading)
+            Text(abilityModifier)
+                .font(.caption)
+                .foregroundColor(.gray)
+                .frame(width: 40, alignment: .leading)
+            Spacer()
+            TextField("Enter value", text: $value)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .frame(width: 80)
+        }
+        .padding(.vertical, 5)
+    }
+}
+
+struct SkillsSectionHeader: View {
+    var title: String
+    
+    var body: some View {
+        Text(title)
+            .font(.headline)
+            .padding()
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Color.blue.opacity(0.2))
+            .cornerRadius(8)
+    }
+}
+
+struct SkillsSection_Previews: PreviewProvider {
+    static var previews: some View {
+        SkillsSection()
+    }
+}
