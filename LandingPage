@@ -1,1 +1,111 @@
+/
+//  ContentView.swift
+//  PathfinderCustomCharacterSheet
+//
+//  Created by CD DJ on 12/22/24.
+//
+
+import SwiftUI
+
+struct LandingPageView: View {
+    var body: some View {
+        NavigationView {
+            VStack(spacing: 20) {
+                Text("Pathfinder Character Sheet Creator")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .multilineTextAlignment(.center)
+
+                Text("Streamline your Pathfinder experience with our easy-to-use character sheet creator. Build, customize, and manage your characters effortlessly!")
+                                   .font(.custom("HelveticaNeue", size: 20))
+                                   .multilineTextAlignment(.center)
+                                   .padding()
+
+
+                Spacer()
+
+                VStack(spacing: 15) {
+                    NavigationLink(destination: CharacterCreationView()) {
+                        Label("Create a New Character", systemImage: "plus.circle")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(Color.blue)
+                            .cornerRadius(10)
+                    }
+
+                    NavigationLink(destination: CharacterListView()) {
+                        Label("View Saved Characters", systemImage: "list.bullet")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(Color.green)
+                            .cornerRadius(10)
+                    }
+
+                    NavigationLink(destination: SettingsView()) {
+                        Label("Settings", systemImage: "gearshape")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(Color.gray)
+                            .cornerRadius(10)
+                    }
+                }
+                .padding(.horizontal)
+
+                Spacer()
+
+                Text("Compatible with Pathfinder 1e")
+                    .font(.footnote)
+                    .foregroundColor(.white)
+                    .onTapGesture {
+                        // Navigate to a help or rules page
+                    }
+
+            }
+            .padding()
+            .background(
+                LinearGradient(gradient: Gradient(colors: [Color.blue.opacity(0.9), Color.black.opacity(0.9)]),
+                               startPoint: .top,
+                               endPoint: .bottom)
+                    .edgesIgnoringSafeArea(.all)
+            )
+        }
+    }
+}
+
+struct CharacterCreationView: View {
+    var body: some View {
+        Text("Character Creation Screen")
+    }
+}
+
+struct CharacterListView: View {
+    var body: some View {
+        Text("Saved Characters Screen")
+    }
+}
+
+struct SettingsView: View {
+    var body: some View {
+        Text("Settings Screen")
+    }
+}
+
+struct LandingPageView_Previews: PreviewProvider {
+    static var previews: some View {
+        Group {
+            LandingPageView()
+                .previewDevice("iPhone 14")
+                .preferredColorScheme(.light)
+            LandingPageView()
+                .previewDevice("iPhone 14")
+                .preferredColorScheme(.dark)
+        }
+    }
+}
 
