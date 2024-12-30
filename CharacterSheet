@@ -1,0 +1,175 @@
+//
+//  CharacterSheet.swift
+//  PathfinderCustomCharacterSheet
+//
+//  Created by CD DJ on 12/22/24.
+//
+
+import SwiftUI
+
+struct CharacterSheet: View {
+    // State variables for user input (existing stats and new character details)
+    @State private var name: String = ""
+    @State private var characterClass: String = ""
+    @State private var level: String = ""
+    @State private var alignment: String = ""
+    @State private var religion: String = ""
+    @State private var home: String = ""
+    @State private var race: String = ""
+    @State private var size: String = ""
+    @State private var gender: String = ""
+    @State private var age: String = ""
+    @State private var height: String = ""
+    @State private var weight: String = ""
+    @State private var hairColor: String = ""
+    @State private var eyeColor: String = ""
+    
+    @State private var hp: String = ""
+    @State private var initiative: String = ""
+    @State private var landSpeed: String = ""
+    @State private var flySpeed: String = ""
+    @State private var swimSpeed: String = ""
+    @State private var climbSpeed: String = ""
+    @State private var burrowSpeed: String = ""
+    
+    @State private var ac: String = ""
+    @State private var touchAc: String = ""
+    @State private var flatFootedAc: String = ""
+    
+    @State private var fortitudeSave: String = ""
+    @State private var reflexSave: String = ""
+    @State private var willSave: String = ""
+    
+    @State private var baseAttackBonus: String = ""
+    @State private var spellResistance: String = ""
+    @State private var combatMovementBonus: String = ""
+    @State private var combatMovementDefense: String = ""
+    
+    @State private var languages: [String] = [""]
+    
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 15) {
+                
+                // Character Info Section
+                SectionHeader(title: "Character Info")
+                StatInputRow(label: "Name", value: $name)
+                StatInputRow(label: "Class", value: $characterClass)
+                StatInputRow(label: "Level", value: $level)
+                StatInputRow(label: "Alignment", value: $alignment)
+                StatInputRow(label: "Religion", value: $religion)
+                StatInputRow(label: "Home", value: $home)
+                StatInputRow(label: "Race", value: $race)
+                StatInputRow(label: "Size", value: $size)
+                StatInputRow(label: "Gender", value: $gender)
+                StatInputRow(label: "Age", value: $age)
+                StatInputRow(label: "Height", value: $height)
+                StatInputRow(label: "Weight", value: $weight)
+                StatInputRow(label: "Hair/Fur Color", value: $hairColor)
+                StatInputRow(label: "Eye Color", value: $eyeColor)
+                
+                // Basic Stats Section
+                SectionHeader(title: "Basic Stats")
+                StatInputRow(label: "HP", value: $hp)
+                StatInputRow(label: "Initiative", value: $initiative)
+                
+                // Movement Speeds Section
+                SectionHeader(title: "Movement Speeds")
+                StatInputRow(label: "Land Speed", value: $landSpeed)
+                StatInputRow(label: "Fly Speed", value: $flySpeed)
+                StatInputRow(label: "Swim Speed", value: $swimSpeed)
+                StatInputRow(label: "Climb Speed", value: $climbSpeed)
+                StatInputRow(label: "Burrow Speed", value: $burrowSpeed)
+                
+                // Armor Class Section
+                SectionHeader(title: "Armor Class")
+                StatInputRow(label: "AC", value: $ac)
+                StatInputRow(label: "Touch AC", value: $touchAc)
+                StatInputRow(label: "Flat-Footed AC", value: $flatFootedAc)
+                
+                // Saving Throws Section
+                SectionHeader(title: "Saving Throws")
+                StatInputRow(label: "Fortitude Save", value: $fortitudeSave)
+                StatInputRow(label: "Reflex Save", value: $reflexSave)
+                StatInputRow(label: "Will Save", value: $willSave)
+                
+                // Combat Stats Section
+                SectionHeader(title: "Combat Stats")
+                StatInputRow(label: "Base Attack Bonus", value: $baseAttackBonus)
+                StatInputRow(label: "Spell Resistance", value: $spellResistance)
+                StatInputRow(label: "Combat Movement Bonus", value: $combatMovementBonus)
+                StatInputRow(label: "Combat Movement Defense", value: $combatMovementDefense)
+                
+                // Languages Section
+                SectionHeader(title: "Languages")
+                ForEach(languages.indices, id: \.self) { index in
+                    HStack {
+                        TextField("Enter language", text: $languages[index])
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .padding()
+                        Button(action: {
+                            if languages.count < 5 { // Limit number of languages
+                                languages.append("")
+                            }
+                        }) {
+                            Image(systemName: "plus.circle.fill")
+                                .foregroundColor(.blue)
+                        }
+                    }
+                }
+                
+                Button(action: {
+                    // Handle saving logic here
+                }) {
+                    Text("Save")
+                        .fontWeight(.bold)
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
+                }
+                .padding(.top, 20)
+            }
+            .padding()
+        }
+        .navigationBarTitle("Character Sheet")
+    }
+}
+
+struct SectionHeader: View {
+    var title: String
+    
+    var body: some View {
+        Text(title)
+            .font(.headline)
+            .padding(.top, 10)
+            .padding(.bottom, 5)
+    }
+}
+
+struct StatInputRow: View {
+    var label: String
+    @Binding var value: String
+    
+    var body: some View {
+        HStack {
+            Text(label)
+                .font(.subheadline)
+                .frame(width: 150, alignment: .leading)
+            Spacer()
+            TextField("Enter \(label.lowercased())", text: $value)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .frame(width: 100)
+                .keyboardType(label == "Age" || label == "Height" || label == "Weight" ? .numberPad : .default)
+        }
+        .padding(.vertical, 5)
+    }
+}
+
+struct CharacterSheet_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationView {
+            CharacterSheet()
+        }
+    }
+}
