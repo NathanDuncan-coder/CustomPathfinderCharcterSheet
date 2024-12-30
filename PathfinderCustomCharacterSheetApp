@@ -1,0 +1,17 @@
+//
+//  PathfinderCustomCharacterSheetApp.swift
+//  PathfinderCustomCharacterSheet
+//
+//  Created by CD DJ on 12/22/24.(This was from the computer itself, it was made by Nathan Duncan)
+//
+
+import SwiftUI
+
+@main
+struct PathfinderCustomCharacterSheetApp: App {
+    var body: some Scene {
+        WindowGroup {
+            LandingPageView()
+        }
+    }
+}
