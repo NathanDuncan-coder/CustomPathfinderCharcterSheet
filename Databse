@@ -1,0 +1,85 @@
+-- Basic character information
+CREATE TABLE characters (
+    character_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id TEXT NOT NULL,
+    character_name TEXT NOT NULL,
+    race TEXT NOT NULL,
+    class TEXT NOT NULL,
+    level INTEGER NOT NULL,
+    alignment TEXT,
+    deity TEXT,
+    size TEXT,
+    gender TEXT,
+    height TEXT,
+    weight TEXT,
+    experience_points INTEGER DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Ability scores
+CREATE TABLE ability_scores (
+    character_id INTEGER,
+    strength INTEGER NOT NULL,
+    dexterity INTEGER NOT NULL,
+    constitution INTEGER NOT NULL,
+    intelligence INTEGER NOT NULL,
+    wisdom INTEGER NOT NULL,
+    charisma INTEGER NOT NULL,
+    FOREIGN KEY (character_id) REFERENCES characters(character_id) ON DELETE CASCADE
+);
+
+-- Skills
+CREATE TABLE skills (
+    character_id INTEGER,
+    skill_name TEXT NOT NULL,
+    ranks INTEGER NOT NULL,
+    class_skill BOOLEAN,
+    misc_modifier INTEGER,
+    FOREIGN KEY (character_id) REFERENCES characters(character_id) ON DELETE CASCADE
+);
+
+-- Inventory items
+CREATE TABLE inventory (
+    item_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    character_id INTEGER,
+    item_name TEXT NOT NULL,
+    quantity INTEGER DEFAULT 1,
+    weight REAL,
+    cost TEXT,
+    description TEXT,
+    equipped BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (character_id) REFERENCES characters(character_id) ON DELETE CASCADE
+);
+
+-- Spells known/prepared
+CREATE TABLE spells (
+    spell_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    character_id INTEGER,
+    spell_name TEXT NOT NULL,
+    spell_level INTEGER NOT NULL,
+    prepared BOOLEAN DEFAULT FALSE,
+    cast BOOLEAN DEFAULT FALSE,
+    description TEXT,
+    FOREIGN KEY (character_id) REFERENCES characters(character_id) ON DELETE CASCADE
+);
+
+-- Feats
+CREATE TABLE feats (
+    feat_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    character_id INTEGER,
+    feat_name TEXT NOT NULL,
+    description TEXT,
+    FOREIGN KEY (character_id) REFERENCES characters(character_id) ON DELETE CASCADE
+);
+
+-- Combat stats
+CREATE TABLE combat_stats (
+    character_id INTEGER,
+    base_attack_bonus INTEGER,
+    armor_class INTEGER,
+    initiative_modifier INTEGER,
+    hit_points INTEGER,
+    temporary_hit_points INTEGER DEFAULT 0,
+    FOREIGN KEY (character_id) REFERENCES characters(character_id) ON DELETE CASCADE
+);
